@@ -254,6 +254,19 @@ int wokerManager::IsExist(int id)
 	return index;
 }
 
+int wokerManager::IsExist(string name)
+{
+	int index = -1;
+
+	for (int i = 0; i < this->_EmpNum; i++) {
+		if (this->_EmpArray[i]->_Name == name) {
+			index = i;
+			break;
+		}
+	}
+	return index;
+}
+
 void wokerManager::dele_Emp()
 {
 	if (this->_FileIsEmpty) {
@@ -343,6 +356,128 @@ void wokerManager::modify_Emp()
 
 			this->save();
 		}
+	}
+	system("pause");
+	system("cls");
+}
+
+void wokerManager::find_Emp()
+{
+	if (this->_FileIsEmpty) {
+		cout << "文件不存在或记录为空!" << endl;
+	}
+	else {
+		cout << "请输入查找员工的方式:" << endl;
+		cout << "1.按职工编号查找" << endl;
+		cout << "2.按姓名查找" << endl;
+
+		int select = 0;
+		cin >> select;
+
+		//按照编号
+		if (select == 1) {
+			cout << "请输入要查找的职工编号:" << endl;
+			int id;
+			cin>>id;
+
+			int ret = this->IsExist(id);
+
+			if (ret == -1) {
+				cout << "查找的员工不存在！" << endl;
+			}
+			else {
+				cout << "查找到" << id << "号员工信息" << endl;
+				_EmpArray[ret]->showInfo();
+			}
+		}
+		//按照姓名
+		else if (select == 2) {
+			cout << "请输入要查找的员工姓名:" << endl;
+			string name;
+			cin >> name;
+
+			int ret = this->IsExist(name);
+
+			if (ret == -1) {
+				cout << "查找的员工不存在！" << endl;
+			}
+			else {
+				cout << "查找到" << ret<<"号"<<name << "员工信息" << endl;
+				_EmpArray[ret]->showInfo();
+			}
+		}
+	}
+	system("pause");
+	system("cls");
+}
+
+void wokerManager::sort_Emp()
+{
+	if (this->_FileIsEmpty) {
+		cout << "文件不存在或为空!!" << endl;
+		system("pause");
+		system("cls");
+	}
+	else {
+		cout << "请选择排序方式:  " << endl;
+		cout << "1.按照职工号进行升序" << endl;
+		cout << "2.按照职工号进行降序" << endl;
+		int select = 0;
+		cin >> select;
+		for (int i = 0; i < _EmpNum; i++) {
+			int minOrMax = i;	//声明最小值 或 最大值下标
+			for(int j=i+1;j<this->_EmpNum;j++){
+				// 升序
+				if (select == 1) {
+					if (this->_EmpArray[minOrMax]->_ID > this->_EmpArray[j]->_ID) {
+						minOrMax = j;
+					}
+				}
+				//降序
+				else {
+					if (this->_EmpArray[minOrMax]->_ID < this->_EmpArray[j]->_ID) {
+						minOrMax = j;
+					}
+				}
+			}
+			//判断一开始认定的最小值或最大值是不是，如果不是--交换数据
+			if (i != minOrMax) {
+				Worker* temp = this->_EmpArray[i];
+				_EmpArray[i] = _EmpArray[minOrMax];
+				_EmpArray[minOrMax] = temp;
+			}				
+		}
+		cout << "排序成功！排序后的结果为" << endl;
+		this->save();   //排序后的结果保存到文件中
+		this->show_Emp();
+	}
+}
+
+void wokerManager::dele_AllData()
+{
+	cout << "确认清空?" << endl;
+	cout << "输入-1-确认" << endl;
+	int select=0;
+	cin >> select;
+	if (select == 1) {
+		ofstream ofs;
+		ofs.open(FILENAME, ios::trunc);	//删除文件后再创建
+		ofs.close();
+
+		//深度清理堆区
+		if (this->_EmpArray != NULL) {
+			//删除堆区的每个职工对象
+			for (int i = 0; i < this->_EmpNum; i++) {
+				delete this->_EmpArray[i];
+				this->_EmpArray[i] = NULL;
+			}
+			//删除堆区的数组指针
+			delete[] this->_EmpArray;
+			this->_EmpArray = NULL;
+			this->_EmpNum = 0;
+			this->_FileIsEmpty = true;
+		}
+		cout << "清理成功!" << endl;
 	}
 	system("pause");
 	system("cls");

@@ -3,6 +3,8 @@
 #include<string>
 #include<fstream>
 
+#include<vector>
+
 #include"Worker.h"
 
 #define FILENAME "DataBase/empList.txt"
@@ -44,12 +46,22 @@ public:
 
 	//判断职工是否存在
 	int IsExist(int id);
+	int IsExist(string name);
 
 	//删除职工
 	void dele_Emp();
 
 	//修改职工信息
 	void modify_Emp();
+
+	//查找员工
+	void find_Emp();
+
+	//按职工编号排序
+	void sort_Emp();
+
+	//清空所有文档
+	void dele_AllData();
 
 
 	~wokerManager();

@@ -13,7 +13,7 @@
 //void test();
 
 int main() {
-	
+
 	//实例化manager对象
 	wokerManager wm;
 
@@ -26,7 +26,7 @@ int main() {
 		cin>>choice;
 
 		switch(choice){
-		case 0:		
+		case 0:
 			wm.exitSystem();
 			break;
 		case 1:
@@ -42,6 +42,13 @@ int main() {
 			wm.modify_Emp();
 			break;
 		case 5:
+			wm.find_Emp();
+			break;
+		case 6:
+			wm.sort_Emp();
+			break;
+		case 7:
+			wm.dele_AllData();
 			break;
 		default:
 			system("cls");
